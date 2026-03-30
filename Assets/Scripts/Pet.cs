@@ -8,6 +8,7 @@ public class Pet : MonoBehaviour
     public enum PetSkill { HealEnergy, SpawnItem, MagnetPulse } 
     
     [Header("Pet Settings")]
+    public string petName = "Shark";
     public PetType petType = PetType.Ground;
     public PetSkill petSkill = PetSkill.HealEnergy;
     public Transform target;
@@ -56,12 +57,20 @@ public class Pet : MonoBehaviour
         
         if (PlayerScript.speedMultiplier == 0f)
         {
-            if (animator != null) { animator.Play("Shark_Pet_Idle"); animator.speed = 1f; }
+            if (animator != null) 
+            {
+                animator.Play(petName + "_Pet_Idle"); 
+                animator.speed = 1f;
+            }
             return; 
         }
         else
         {
-            if (animator != null) { animator.Play("Shark_Pet_Run"); animator.speed = PlayerScript.speedMultiplier / 1.5f; }
+            if (animator != null) 
+            {
+                animator.Play(petName + "_Pet_Run"); 
+                animator.speed = PlayerScript.speedMultiplier / 1.5f; 
+            }
         }
         
         FollowTarget();
