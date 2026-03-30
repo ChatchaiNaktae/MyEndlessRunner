@@ -12,6 +12,7 @@ TagManager:
   - Blast
   - Platform
   - DeathZone
+  - FeverLetter
   layers:
   - Default
   - TransparentFX

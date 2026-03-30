@@ -38,6 +38,11 @@ public class CactusSpawner : MonoBehaviour
     [Header("Ground Check")]
     public LayerMask groundLayer;
     
+    [Header("Fever Mode Settings")]
+    public GameObject[] feverLetters;
+    public float letterSpawnChance = 0.15f; 
+    private int nextLetterToSpawn = 0;
+    
     void Start()
     {
         SpawnNextObject(); 
@@ -45,10 +50,31 @@ public class CactusSpawner : MonoBehaviour
     
     void SpawnNextObject()
     {
+        if (PlayerScript.isFeverMode)
+        {
+            GenerateFeverBonusCoins();
+            Invoke("SpawnNextObject", 0.4f);
+            return;
+        }
+        
         float randomTime = Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
         float roll = Random.value;
         
         RaycastHit2D groundHit = Physics2D.Raycast(transform.position, Vector2.down, 5f, groundLayer);
+        
+        if (feverLetters.Length > 0 && roll <= letterSpawnChance && groundHit.collider != null)
+        {
+            Vector3 spawnPos = new Vector3(transform.position.x, 3.5f, 0); // ให้ลอยสูงนิดนึง บังคับให้ต้องกระโดดเก็บ
+            Instantiate(feverLetters[nextLetterToSpawn], spawnPos, Quaternion.identity);
+            
+            nextLetterToSpawn++;
+            if (nextLetterToSpawn >= feverLetters.Length) nextLetterToSpawn = 0; // วนกลับไป B ใหม่
+            
+            Invoke("SpawnNextObject", randomTime);
+            return;
+        }
+        
+        roll = Random.value;
         
         if (roll <= platformChance) 
         {
@@ -66,15 +92,8 @@ public class CactusSpawner : MonoBehaviour
             {
                 Vector3 spawnPos = transform.position;
                 Instantiate(ChooseRandomCactus(), spawnPos, Quaternion.identity);
-            
-                if (Random.value <= 0.7f)
-                {
-                    GenerateArcOverCactus(spawnPos);
-                }
-            }
-            else
-            {
-                Debug.Log("Skipped Cactus: Pitfall detected!");
+                
+                if (Random.value <= 0.7f) GenerateArcOverCactus(spawnPos);
             }
         }
         
@@ -159,6 +178,26 @@ public class CactusSpawner : MonoBehaviour
             
             GameObject newCoin = Instantiate(selectedCoin, finalPos, Quaternion.identity);
             newCoin.transform.SetParent(patternContainer.transform);
+        }
+    }
+    
+    void GenerateFeverBonusCoins()
+    {
+        Vector3 spawnPos = new Vector3(transform.position.x, 10f, 0);
+        GameObject patternContainer = new GameObject("FeverCoins");
+        patternContainer.transform.position = spawnPos;
+        PatternMovement movementScript = patternContainer.AddComponent<PatternMovement>();
+        movementScript.speed = moveSpeed;
+        
+        GameObject selectedCoin = coinPrefabs[Random.Range(0, coinPrefabs.Length)];
+        for (int x = 0; x < 3; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                Vector3 localPos = new Vector3(x * coinSpacing, y * 1.5f, 0);
+                GameObject newCoin = Instantiate(selectedCoin, spawnPos + localPos, Quaternion.identity);
+                newCoin.transform.SetParent(patternContainer.transform);
+            }
         }
     }
 }

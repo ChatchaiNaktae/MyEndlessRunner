@@ -687,6 +687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopPanel: {fileID: 550006278}
+  petDatabase: {fileID: 11400000, guid: d5b962e173b324a40b9d665ddcfd5f47, type: 2}
   petButtonPrefab: {fileID: 4071632021804844950, guid: 031d57a55ee434348806e38e662a04d4, type: 3}
   shopContentContainer: {fileID: 908340929}
   availablePets:

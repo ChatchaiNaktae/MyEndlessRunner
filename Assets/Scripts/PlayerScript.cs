@@ -59,6 +59,15 @@ public class PlayerScript : MonoBehaviour
     private bool isBlast = false;
     private float normalSpeedIncreaseRate;
     
+    [Header("Fever Mode Settings")]
+    public static bool isFeverMode = false;
+    public TextMeshProUGUI feverTextUI;
+    public Transform mainCamera;
+    public float feverDuration = 7f;
+    private int feverCollected = 0;
+    private string[] feverWord = { "B", "O", "N", "U", "S" };
+    private bool isTransitioningFever = false;
+    
     [Header("Sliding Settings")]
     public float slideColliderHeight = 0.5f;
     private float originalColliderHeight;
@@ -278,6 +287,15 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerDie();
         }
+        else if (hit.gameObject.tag == "DeathZone")
+        {
+            if (hit.gameObject.CompareTag("FeverLetter"))
+            {
+                AudioManager.instance.PlaySFX(coinSound);
+                Destroy(hit.gameObject);
+                CollectFeverLetter();
+            }
+        }
     }
     
     IEnumerator GiantRoutine()
@@ -392,5 +410,79 @@ public class PlayerScript : MonoBehaviour
     void WaitForSceneLoad()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    void CollectFeverLetter()
+    {
+        if (isFeverMode || isTransitioningFever) return;
+
+        feverCollected++;
+        UpdateFeverUI();
+
+        if (feverCollected >= 5)
+        {
+            StartCoroutine(FeverRoutine());
+        }
+    }
+    
+    public void UpdateFeverUI()
+    {
+        if (feverTextUI == null) return;
+        
+        string display = "";
+        for (int i = 0; i < 5; i++)
+        {
+            if (i < feverCollected) display += "<color=yellow>" + feverWord[i] + "</color> ";
+            else display += "<color=#888888>" + feverWord[i] + "</color> "; // สีเทา
+        }
+        feverTextUI.text = display;
+    }
+    
+    IEnumerator FeverRoutine()
+    {
+        isFeverMode = true;
+        isTransitioningFever = true;
+        
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.velocity = Vector2.zero;
+        isInvincible = true;
+        
+        float elapsedTime = 0f;
+        Vector3 playerStart = transform.position;
+        Vector3 playerTarget = new Vector3(transform.position.x, 10f, 0);
+        Vector3 cameraStart = mainCamera.position;
+        Vector3 cameraTarget = new Vector3(cameraStart.x, 10f, cameraStart.z);
+        
+        while (elapsedTime < 1f)
+        {
+            transform.position = Vector3.Lerp(playerStart, playerTarget, elapsedTime);
+            mainCamera.position = Vector3.Lerp(cameraStart, cameraTarget, elapsedTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        isTransitioningFever = false;
+        
+        yield return new WaitForSeconds(feverDuration);
+        
+        isTransitioningFever = true;
+        elapsedTime = 0f;
+        playerStart = transform.position;
+        playerTarget = new Vector3(transform.position.x, 0f, 0); // กลับพื้นดิน
+        
+        while (elapsedTime < 1f)
+        {
+            transform.position = Vector3.Lerp(playerStart, playerTarget, elapsedTime);
+            mainCamera.position = Vector3.Lerp(cameraTarget, cameraStart, elapsedTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        rb.gravityScale = originalGravity;
+        isInvincible = false;
+        isFeverMode = false;
+        isTransitioningFever = false;
+        feverCollected = 0;
+        UpdateFeverUI();
     }
 }
