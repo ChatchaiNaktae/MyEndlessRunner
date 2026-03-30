@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class Pet : MonoBehaviour
 {
-    [Header("Follow Settings")]
+    public enum PetType { Flying, Ground } 
+    
+    [Header("Pet Settings")]
+    public PetType petType = PetType.Ground;
     public Transform target;
     public float smoothTime = 0.3f;
-    public Vector3 offset = new Vector3(-1.5f, 1f, 0f);
+    public Vector3 offset = new Vector3(-1.5f, -0.5f, 0f);
     
     private Vector3 velocity = Vector3.zero;
     
     [Header("Animation Settings")]
     public float bobSpeed = 3f;
     public float bobHeight = 0.2f;
+    private Animator animator;
     
     [Header("Skill: Auto Heal")]
     public float healInterval = 10f;
@@ -22,57 +26,71 @@ public class Pet : MonoBehaviour
     
     private PlayerScript playerScript;
     
-    // Start is called before the first frame update
     void Start()
     {
         if (target != null)
         {
             playerScript = target.GetComponent<PlayerScript>();
         }
+        
+        animator = GetComponent<Animator>();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        if (target == null || PlayerScript.speedMultiplier == 0f) return;
+        if (target == null) return;
         
-        FollowAndBob();
+        if (PlayerScript.speedMultiplier == 0f)
+        {
+            if (animator != null) 
+            {
+                animator.Play("Shark_Pet_Idle");
+                animator.speed = 1f;
+            }
+            return;
+        }
+        else
+        {
+            if (animator != null) 
+            {
+                animator.Play("Shark_Pet_Run");
+                animator.speed = PlayerScript.speedMultiplier / 1.5f; 
+            }
+        }
+        
+        FollowTarget();
+        
         UseSkill();
     }
     
-    void FollowAndBob()
+    void FollowTarget()
     {
         Vector3 targetPosition = target.position + offset;
         
-        float bobbing = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
-        targetPosition.y += bobbing;
+        if (petType == PetType.Flying)
+        {
+            float bobbing = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
+            targetPosition.y += bobbing;
+        }
         
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
     }
     
     void UseSkill()
     {
-        if (playerScript != null)
+        healTimer += Time.deltaTime;
+        if (healTimer >= healInterval)
         {
-            healTimer += Time.deltaTime;
-            if (healTimer >= healInterval)
+            playerScript.currentEnergy += healAmount;
+            if (playerScript.currentEnergy > playerScript.maxEnergy)
             {
-                playerScript.currentEnergy += healAmount;
-                
-                if (playerScript.currentEnergy > playerScript.maxEnergy)
-                {
-                    playerScript.currentEnergy = playerScript.maxEnergy;
-                }
-                
-                if (playerScript.energyBar != null)
-                {
-                    playerScript.energyBar.value = playerScript.currentEnergy;
-                }
-                
-                healTimer = 0f;
-                
-                // (ถ้ามีเสียงฮีล สามารถสั่ง PlaySFX ตรงนี้ได้เลยครับ)
+                playerScript.currentEnergy = playerScript.maxEnergy;
             }
+            if (playerScript.energyBar != null)
+            {
+                playerScript.energyBar.value = playerScript.currentEnergy;
+            }
+            healTimer = 0f;
         }
     }
 }
