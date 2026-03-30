@@ -30,7 +30,12 @@ public class DiscordManager : MonoBehaviour
     {
         discord = new Discord.Discord(applicationID, (System.UInt64)Discord.CreateFlags.Default);
         
-        UpdateDiscordStatus("In Main Menu", "Preparing to run");
+        FindObjectOfType<DiscordManager>().UpdateStatus(
+            "At Main Menu", 
+            "Preparing to Run", 
+            "icon_menu",
+            "Endless Runner"
+        );
     }
     
     void Update()
@@ -41,30 +46,39 @@ public class DiscordManager : MonoBehaviour
         }
     }
     
-    public void UpdateDiscordStatus(string stateText, string detailsText)
+    public void OnOpenPetShop() {
+        UpdateStatus(
+            "In Pet Shop", 
+            "Browsing for a buddy", 
+            "icon_pet", 
+            "Selecting Pet"
+        );
+    }
+    
+    public void UpdateStatus(string details, string state, string largeImageKey, string largeText)
     {
         if (discord == null) return;
         
         var activityManager = discord.GetActivityManager();
         var activity = new Discord.Activity
         {
-            State = stateText,
-            Details = detailsText,
+            Details = details,
+            State = state,
             Assets = {
-                LargeImage = "logo",
-                LargeText = "My Endless Runner"
-            }
+                LargeImage = largeImageKey,
+                LargeText = largeText
+            },
+            Instance = true
         };
         
-        activityManager.UpdateActivity(activity, (res) =>
-        {
-            if (res == Discord.Result.Ok)
+        if (details.Contains("Running")) {
+            activity.Timestamps.Start = System.DateTimeOffset.Now.ToUnixTimeSeconds();
+        }
+        
+        activityManager.UpdateActivity(activity, (result) => {
+            if (result == Discord.Result.Ok)
             {
-                Debug.Log("Discord status updated successfully!");
-            }
-            else
-            {
-                Debug.LogWarning("Failed to update Discord status.");
+                Debug.Log("Discord Status Updated: " + details);
             }
         });
     }

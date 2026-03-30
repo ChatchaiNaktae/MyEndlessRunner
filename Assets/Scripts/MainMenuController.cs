@@ -55,7 +55,7 @@ public class MainMenuController : MonoBehaviour
     
     public void PlayGame() { SceneManager.LoadScene("GameScene"); }
     public void QuitGame() { Application.Quit(); Debug.Log("Game Closed"); }
-    public void OpenShop() { if (shopPanel != null) shopPanel.SetActive(true); }
+    public void OpenShop() { if (shopPanel != null) shopPanel.SetActive(true); if (DiscordManager.instance != null) DiscordManager.instance.OnOpenPetShop(); }
     public void CloseShop() { if (shopPanel != null) shopPanel.SetActive(false); }
     
     public void SelectPet(int petIndex)

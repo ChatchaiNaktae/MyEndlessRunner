@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour
     public TextMeshProUGUI finalScoreText;
     private int score;
     private int highScore;
+    private int totalDeaths;
     public static float speedMultiplier = 1f;
     public float speedIncreaseRate = 0.02f;
     public float maxSpeedMultiplier = 3f;
@@ -100,6 +101,7 @@ public class PlayerScript : MonoBehaviour
         spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
         
         speedMultiplier = 1f;
+        totalDeaths = PlayerPrefs.GetInt("TotalDeaths", 0);
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         if (highScoreUI != null) highScoreUI.text = "High Score: " + highScore.ToString();
         
@@ -111,6 +113,14 @@ public class PlayerScript : MonoBehaviour
         }
         
         isMagnetActive = false;
+        
+        FindObjectOfType<DiscordManager>().UpdateStatus(
+            "Running for Life!", 
+            "Score: 0", 
+            "icon_game", 
+            "Game in Progress"
+        );
+        InvokeRepeating("UpdateInGameStatus", 10f, 10f);
     }
     
     void Update()
@@ -331,10 +341,31 @@ public class PlayerScript : MonoBehaviour
         }
     }
     
+    void UpdateInGameStatus() {
+        int currentScore = (int)score; // Use your existing score variable
+        FindObjectOfType<DiscordManager>().UpdateStatus(
+            "Running for Life!", 
+            "Score: " + currentScore + " | Deaths: " + totalDeaths, 
+            "icon_game", 
+            "In-Game"
+        );
+    }
+    
     void PlayerDie()
     {
         isDead = true;
         currentEnergy = 0;
+        totalDeaths++;
+        PlayerPrefs.SetInt("TotalDeaths", totalDeaths);
+        
+        FindObjectOfType<DiscordManager>().UpdateStatus(
+            "Game Over", 
+            "Died " + totalDeaths + " times total", 
+            "icon_dead", 
+            "Rest in Peace"
+        );
+        CancelInvoke("UpdateInGameStatus");
+        
         if (energyBar != null) energyBar.value = 0;
         
         AudioManager.instance.PlaySFX(deathSound);
