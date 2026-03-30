@@ -336,7 +336,12 @@ MonoBehaviour:
   skillInterval: 15
   healAmount: 5
   itemToSpawn: {fileID: 4817046466651453050, guid: fa27b530e829aed4e8e775b1eb18a9cb, type: 3}
+  spawnOffsetY: 0.5
+  spawnDistanceX: 12
   magnetDuration: 3
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!212 &231001347
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2052,7 +2057,12 @@ MonoBehaviour:
   skillInterval: 10
   healAmount: 5
   itemToSpawn: {fileID: 0}
+  spawnOffsetY: 0.5
+  spawnDistanceX: 12
   magnetDuration: 3
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!212 &927905393
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2662,6 +2672,9 @@ MonoBehaviour:
   cactusChance: 0.5
   lineChance: 0.35
   platformChance: 0.25
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &1544666108
 Transform:
   m_ObjectHideFlags: 0

@@ -35,6 +35,9 @@ public class CactusSpawner : MonoBehaviour
     public float lineChance = 0.25f;
     public float platformChance = 0.25f;
     
+    [Header("Ground Check")]
+    public LayerMask groundLayer;
+    
     void Start()
     {
         SpawnNextObject(); 
@@ -44,6 +47,8 @@ public class CactusSpawner : MonoBehaviour
     {
         float randomTime = Random.Range(minTimeBetweenSpawns, maxTimeBetweenSpawns);
         float roll = Random.value;
+        
+        RaycastHit2D groundHit = Physics2D.Raycast(transform.position, Vector2.down, 5f, groundLayer);
         
         if (roll <= platformChance) 
         {
@@ -57,12 +62,19 @@ public class CactusSpawner : MonoBehaviour
         }
         else 
         {
-            Vector3 spawnPos = transform.position;
-            Instantiate(ChooseRandomCactus(), spawnPos, Quaternion.identity);
-            
-            if (Random.value <= 0.7f)
+            if (groundHit.collider != null)
             {
-                GenerateArcOverCactus(spawnPos);
+                Vector3 spawnPos = transform.position;
+                Instantiate(ChooseRandomCactus(), spawnPos, Quaternion.identity);
+            
+                if (Random.value <= 0.7f)
+                {
+                    GenerateArcOverCactus(spawnPos);
+                }
+            }
+            else
+            {
+                Debug.Log("Skipped Cactus: Pitfall detected!");
             }
         }
         

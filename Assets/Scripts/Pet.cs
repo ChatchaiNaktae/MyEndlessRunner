@@ -36,6 +36,9 @@ public class Pet : MonoBehaviour
     [Header("Skill 3: Magnet Pulse")]
     public float magnetDuration = 3f;
     
+    [Header("Ground Check (For Ground Pet)")]
+    public LayerMask groundLayer;
+    
     private PlayerScript playerScript;
     
     void Start()
@@ -68,10 +71,26 @@ public class Pet : MonoBehaviour
     void FollowTarget()
     {
         Vector3 targetPosition = target.position + offset;
-        if (petType == PetType.Flying)
+        
+        if (petType == PetType.Ground)
         {
-            targetPosition.y += Mathf.Sin(Time.time * bobSpeed) * bobHeight;
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, target.position.y + 2f), Vector2.down, 5f, groundLayer);
+            
+            if (hit.collider != null)
+            {
+                targetPosition.y = hit.point.y + 0.5f; 
+            }
+            else
+            {
+                targetPosition.y = transform.position.y;
+            }
         }
+        else if (petType == PetType.Flying)
+        {
+            float bobbing = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
+            targetPosition.y += bobbing;
+        }
+        
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
     }
     
