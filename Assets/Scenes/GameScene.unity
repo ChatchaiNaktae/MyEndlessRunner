@@ -326,6 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76730fc84a7ad3948aee344a57054a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  petName: Shark
   petType: 1
   petSkill: 1
   target: {fileID: 998643869}
@@ -333,6 +334,7 @@ MonoBehaviour:
   offset: {x: -1.5, y: 1, z: 0}
   bobSpeed: 3
   bobHeight: 0.2
+  pivotToFeetOffset: 0
   skillInterval: 15
   healAmount: 5
   itemToSpawn: {fileID: 4817046466651453050, guid: fa27b530e829aed4e8e775b1eb18a9cb, type: 3}
@@ -2047,6 +2049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76730fc84a7ad3948aee344a57054a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  petName: Shark
   petType: 1
   petSkill: 0
   target: {fileID: 998643869}
@@ -2054,6 +2057,7 @@ MonoBehaviour:
   offset: {x: -1.5, y: 1, z: 0}
   bobSpeed: 3
   bobHeight: 0.2
+  pivotToFeetOffset: 0
   skillInterval: 10
   healAmount: 5
   itemToSpawn: {fileID: 0}

@@ -20,6 +20,7 @@ public class Pet : MonoBehaviour
     [Header("Animation Settings")]
     public float bobSpeed = 3f;
     public float bobHeight = 0.2f;
+    public float pivotToFeetOffset = 0.5f;
     private Animator animator;
     
     [Header("Skill Shared Settings")]
@@ -87,7 +88,7 @@ public class Pet : MonoBehaviour
             
             if (hit.collider != null)
             {
-                targetPosition.y = hit.point.y + 0.5f; 
+                targetPosition.y = hit.point.y + pivotToFeetOffset; 
             }
             else
             {
@@ -96,8 +97,7 @@ public class Pet : MonoBehaviour
         }
         else if (petType == PetType.Flying)
         {
-            float bobbing = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
-            targetPosition.y += bobbing;
+            targetPosition.y += Mathf.Sin(Time.time * bobSpeed) * bobHeight;
         }
         
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
