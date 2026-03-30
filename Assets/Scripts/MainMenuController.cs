@@ -12,6 +12,9 @@ public class MainMenuController : MonoBehaviour
         public Sprite petSprite;
     }
     
+    [Header("Panels")]
+    public GameObject shopPanel;
+    
     [Header("Pet Shop UI")]
     public GameObject petButtonPrefab;
     public Transform shopContentContainer;
@@ -23,6 +26,11 @@ public class MainMenuController : MonoBehaviour
         {
             PlayerPrefs.SetInt("SelectedPet", 0);
             PlayerPrefs.Save();
+        }
+        
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(false); 
         }
 
         GeneratePetShopUI();
@@ -63,5 +71,21 @@ public class MainMenuController : MonoBehaviour
         PlayerPrefs.SetInt("SelectedPet", petIndex);
         PlayerPrefs.Save(); 
         Debug.Log("คุณชัยเลือกสัตว์เลี้ยง: " + availablePets[petIndex].petName);
+    }
+    
+    public void OpenShop()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(true);
+        }
+    }
+    
+    public void CloseShop()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(false);
+        }
     }
 }
