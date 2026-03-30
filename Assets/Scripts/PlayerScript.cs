@@ -287,14 +287,11 @@ public class PlayerScript : MonoBehaviour
         {
             PlayerDie();
         }
-        else if (hit.gameObject.tag == "DeathZone")
+        else if (hit.gameObject.tag == "FeverLetter") 
         {
-            if (hit.gameObject.CompareTag("FeverLetter"))
-            {
-                AudioManager.instance.PlaySFX(coinSound);
-                Destroy(hit.gameObject);
-                CollectFeverLetter();
-            }
+            AudioManager.instance.PlaySFX(coinSound);
+            Destroy(hit.gameObject);
+            CollectFeverLetter();
         }
     }
     
