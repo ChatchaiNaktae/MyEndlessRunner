@@ -16,6 +16,8 @@ public class PlayerScript : MonoBehaviour
     [Header("UI & Scoring")]
     public TextMeshProUGUI scoreUI;
     public TextMeshProUGUI highScoreUI;
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI finalScoreText;
     private int score;
     private int highScore;
     public static float speedMultiplier = 1f;
@@ -323,7 +325,24 @@ public class PlayerScript : MonoBehaviour
         
         rb.velocity = Vector2.zero;
         
-        Invoke("WaitForSceneLoad", deathSound.length);
+        Invoke("ShowGameOverPanel", deathSound.length);
+    }
+    
+    void ShowGameOverPanel()
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            if (finalScoreText != null)
+            {
+                finalScoreText.text = "SCORE: " + score.ToString();
+            }
+        }
+    }
+    
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
     IEnumerator ActivateMagnetRoutine()
