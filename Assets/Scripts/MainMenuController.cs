@@ -16,6 +16,7 @@ public class MainMenuController : MonoBehaviour
     public GameObject shopPanel;
     
     [Header("Pet Shop UI")]
+    public PetDatabase petDatabase;
     public GameObject petButtonPrefab;
     public Transform shopContentContainer;
     public List<PetInfo> availablePets;
@@ -38,54 +39,29 @@ public class MainMenuController : MonoBehaviour
     
     void GeneratePetShopUI()
     {
-        foreach (Transform child in shopContentContainer)
-        {
-            Destroy(child.gameObject);
-        }
+        foreach (Transform child in shopContentContainer) Destroy(child.gameObject);
         
-        for (int i = 0; i < availablePets.Count; i++)
+        for (int i = 0; i < petDatabase.allPets.Count; i++)
         {
             GameObject newBtnObj = Instantiate(petButtonPrefab, shopContentContainer);
             PetButton petBtnScript = newBtnObj.GetComponent<PetButton>();
             
             if (petBtnScript != null)
             {
-                petBtnScript.Setup(this, availablePets[i].petName, availablePets[i].petSprite, i);
+                petBtnScript.Setup(this, petDatabase.allPets[i].petName, petDatabase.allPets[i].petSprite, i);
             }
         }
     }
     
-    public void PlayGame()
-    {
-        SceneManager.LoadScene("GameScene"); 
-    }
-    
-    public void QuitGame()
-    {
-        Application.Quit();
-        Debug.Log("Game Closed");
-    }
+    public void PlayGame() { SceneManager.LoadScene("GameScene"); }
+    public void QuitGame() { Application.Quit(); Debug.Log("Game Closed"); }
+    public void OpenShop() { if (shopPanel != null) shopPanel.SetActive(true); }
+    public void CloseShop() { if (shopPanel != null) shopPanel.SetActive(false); }
     
     public void SelectPet(int petIndex)
     {
         PlayerPrefs.SetInt("SelectedPet", petIndex);
         PlayerPrefs.Save(); 
-        Debug.Log("คุณชัยเลือกสัตว์เลี้ยง: " + availablePets[petIndex].petName);
-    }
-    
-    public void OpenShop()
-    {
-        if (shopPanel != null)
-        {
-            shopPanel.SetActive(true);
-        }
-    }
-    
-    public void CloseShop()
-    {
-        if (shopPanel != null)
-        {
-            shopPanel.SetActive(false);
-        }
+        Debug.Log("คุณชัยเลือกสัตว์เลี้ยง: " + petDatabase.allPets[petIndex].petName);
     }
 }

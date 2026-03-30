@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a22342d7aed4d27419c1eb232b3d28d8, type: 3}
+  m_Name: MainPetDatabase
+  m_EditorClassIdentifier: 
+  allPets:
+  - petName: Shark
+    petSprite: {fileID: 8596640243658272642, guid: 5d4daff38e3d9174b873918abcf2c1d4, type: 3}
+    petPrefab: {fileID: 5453877862905880056, guid: c48c5e7073b1cc948beee3119350f766, type: 3}
+  - petName: Cookie
+    petSprite: {fileID: -6447722072507503168, guid: 10f3cacccb0c4c547be76836eba20664, type: 3}
+    petPrefab: {fileID: 449479803322816272, guid: c43ceebb3a31bdf49b7f2c289148bff3, type: 3}

@@ -4,26 +4,27 @@ using UnityEngine;
 
 public class PetManager : MonoBehaviour
 {
-    [Header("Available Pets")]
-    public GameObject[] petList;
+    [Header("Database & Target")]
+    public PetDatabase petDatabase;
+    public Transform playerTransform;
     
     void Start()
     {
         int selectedPetIndex = PlayerPrefs.GetInt("SelectedPet", 0);
         
-        for (int i = 0; i < petList.Length; i++)
+        if (petDatabase != null && selectedPetIndex >= 0 && selectedPetIndex < petDatabase.allPets.Count)
         {
-            if (petList[i] != null)
+            GameObject petPrefab = petDatabase.allPets[selectedPetIndex].petPrefab;
+            
+            if (petPrefab != null && playerTransform != null)
             {
-                petList[i].SetActive(false);
-            }
-        }
-        
-        if (selectedPetIndex >= 0 && selectedPetIndex < petList.Length)
-        {
-            if (petList[selectedPetIndex] != null)
-            {
-                petList[selectedPetIndex].SetActive(true);
+                GameObject spawnedPet = Instantiate(petPrefab, playerTransform.position, Quaternion.identity);
+                
+                Pet petScript = spawnedPet.GetComponent<Pet>();
+                if (petScript != null)
+                {
+                    petScript.target = playerTransform;
+                }
             }
         }
     }
