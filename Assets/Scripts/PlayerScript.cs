@@ -78,6 +78,8 @@ public class PlayerScript : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerCollider = GetComponent<BoxCollider2D>();
         
+        Time.timeScale = 1f;
+        
         originalColliderHeight = playerCollider.size.y;
         originalColliderOffset = playerCollider.offset;
         
@@ -337,11 +339,13 @@ public class PlayerScript : MonoBehaviour
             {
                 finalScoreText.text = "SCORE: " + score.ToString();
             }
+            Time.timeScale = 0f;
         }
     }
     
     public void RestartGame()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
