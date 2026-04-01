@@ -3,18 +3,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// What: Centralized manager for all game audio (BGM and SFX).
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     
+    [Header("Settings & Audio Sources")]
+    public SettingsDatabase settingsDatabase;
+    public AudioSource bgmSource;
+    
     private void Awake()
     {
-        instance = this;
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
+    
+    private void Start()
+    {
+        // What: Apply saved music volume when the game starts.
+        if (settingsDatabase != null && bgmSource != null)
+        {
+            bgmSource.volume = settingsDatabase.GetMusicVolume();
+        }
     }
     
     public void PlaySFX(AudioClip clip, float volume = 1f)
     {
-        StartCoroutine(PlaySFXCoroutine(clip, volume));
+        float finalVolume = volume;
+        
+        if (settingsDatabase != null)
+        {
+            finalVolume = volume * settingsDatabase.GetSFXVolume(); 
+        }
+        
+        StartCoroutine(PlaySFXCoroutine(clip, finalVolume));
     }
     
     IEnumerator PlaySFXCoroutine(AudioClip clip, float volume = 1f)
@@ -24,22 +46,17 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = volume;
         audioSource.Play();
         
-        yield return new WaitForSeconds(audioSource.clip.length * 2);
+        yield return new WaitForSeconds(audioSource.clip.length + 0.1f);
         
         Destroy(audioSource);
     }
     
-    // What: Adjusts the background music volume based on settings.
     public void SetMusicVolume(float volume)
     {
-        // สมมติว่าตัวเล่นเพลงชื่อ bgmSource เปลี่ยนชื่อตามโค้ดจริงของน้องชัยได้เลยครับ
-        // bgmSource.volume = volume; 
+        if (bgmSource != null) bgmSource.volume = volume; 
     }
     
-    // What: Adjusts the sound effects volume based on settings.
     public void SetSFXVolume(float volume)
     {
-        // สมมติว่าตัวเล่นเสียงเอฟเฟกต์ชื่อ sfxSource
-        // sfxSource.volume = volume; 
     }
 }

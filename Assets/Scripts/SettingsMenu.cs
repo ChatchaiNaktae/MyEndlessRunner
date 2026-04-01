@@ -2,55 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SettingsMenu : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("Database")]
+    public SettingsDatabase settingsDatabase;
+    public List<LanguageData> languages;
+    
+    [Header("UI Elements")]
     public Slider musicSlider;
     public Slider sfxSlider;
+    public TMP_Dropdown qualityDropdown;
+    public TMP_Dropdown languageDropdown;
+    
+    [Header("Panels")]
+    public GameObject settingPanel;
     
     void Start()
     {
-        // What: Load saved volume settings into the sliders when the menu opens.
-        if (SaveManager.instance != null)
-        {
-            if (musicSlider != null) musicSlider.value = SaveManager.instance.musicVolume;
-            if (sfxSlider != null) sfxSlider.value = SaveManager.instance.sfxVolume;
-        }
+        if (settingsDatabase == null) return;
         
-        // What: Listen for slider changes in real-time.
-        if (musicSlider != null) musicSlider.onValueChanged.AddListener(UpdateMusicVolume);
-        if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(UpdateSFXVolume);
+        // 1. โหลดค่าเก่ามาตั้งให้ UI (สำคัญมาก! เพื่อให้ Slider ไม่กลับไปค่าเริ่มต้น)
+        musicSlider.value = settingsDatabase.GetMusicVolume();
+        sfxSlider.value = settingsDatabase.GetSFXVolume();
+        qualityDropdown.value = (int)settingsDatabase.GetGraphicQuality();
+        languageDropdown.value = (int)settingsDatabase.GetLanguage();
+        
+        // 2. ผูกฟังก์ชันการเปลี่ยนค่า
+        musicSlider.onValueChanged.AddListener(UpdateMusicVolume);
+        sfxSlider.onValueChanged.AddListener(UpdateSFXVolume);
+        qualityDropdown.onValueChanged.AddListener(UpdateGraphicQuality);
+        languageDropdown.onValueChanged.AddListener(UpdateLanguage);
+        
+        // 3. สั่งรันภาษาปัจจุบันทันที
+        UpdateLanguage(languageDropdown.value);
     }
     
-    // What: Updates music volume, saves it, and applies it to the AudioListener.
-    public void UpdateMusicVolume(float value)
-    {
-        if (SaveManager.instance != null)
-        {
-            SaveManager.instance.musicVolume = value;
-            SaveManager.instance.SaveGame();
-        }
-        
-        // Apply volume directly (Requires AudioManager to have a specific function, or handle it there)
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.SetMusicVolume(value);
-        }
+    public void UpdateMusicVolume(float value) {
+        settingsDatabase.SetMusicVolume(value);
+        if (AudioManager.instance != null) AudioManager.instance.SetMusicVolume(value);
     }
     
-    // What: Updates SFX volume, saves it, and applies it globally.
-    public void UpdateSFXVolume(float value)
-    {
-        if (SaveManager.instance != null)
-        {
-            SaveManager.instance.sfxVolume = value;
-            SaveManager.instance.SaveGame();
-        }
-        
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.SetSFXVolume(value);
-        }
+    public void UpdateSFXVolume(float value) {
+        settingsDatabase.SetSFXVolume(value);
     }
+    
+    public void UpdateGraphicQuality(int index) {
+        settingsDatabase.SetGraphicQuality((SettingsDatabase.GraphicQuality)index);
+        QualitySettings.SetQualityLevel(index, true);
+    }
+    
+    public void UpdateLanguage(int index) {
+        settingsDatabase.SetLanguage((SettingsDatabase.GameLanguage)index);
+        // สั่งให้ UI ทั้งเกมเปลี่ยนภาษา (เดี๋ยวเราจะทำสคริปต์ช่วยในขั้นถัดไป)
+        BroadcastMessage("OnLanguageChanged", SendMessageOptions.DontRequireReceiver);
+    }
+    
+    public void OpenSettings() { if (settingPanel != null) settingPanel.SetActive(true); if (DiscordManager.instance != null) DiscordManager.instance.OnOpenSettings(); }
+    public void CloseSettings() { if (settingPanel != null) settingPanel.SetActive(false); }
 }

@@ -64,6 +64,15 @@ public class DiscordManager : MonoBehaviour
         );
     }
     
+    public void OnOpenSettings() {
+        UpdateStatus(
+            "In Settings UI", 
+            "Change someting in settings", 
+            "icon_pet", 
+            "Changing setting"
+        );
+    }
+    
     public void UpdateStatus(string details, string state, string largeImageKey, string largeText)
     {
         if (discord == null) return;

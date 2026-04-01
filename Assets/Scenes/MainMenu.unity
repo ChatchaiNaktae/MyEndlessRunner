@@ -602,8 +602,6 @@ MonoBehaviour:
   highScore: 0
   totalDeaths: 0
   selectedPetIndex: 0
-  musicVolume: 1
-  sfxVolume: 1
   lifetimeCoins: 0
 --- !u!4 &792643284
 Transform:
@@ -1545,6 +1543,7 @@ GameObject:
   - component: {fileID: 1587632806}
   - component: {fileID: 1587632808}
   - component: {fileID: 1587632807}
+  - component: {fileID: 1587632809}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -1668,6 +1667,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587632805}
   m_CullTransparentMesh: 1
+--- !u!114 &1587632809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587632805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa47c7e88f0dcae419d37fe4d238de82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 1
 --- !u!1 &1737089689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,6 +2105,7 @@ GameObject:
   - component: {fileID: 1898594617}
   - component: {fileID: 1898594619}
   - component: {fileID: 1898594618}
+  - component: {fileID: 1898594620}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -2218,6 +2231,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1898594616}
   m_CullTransparentMesh: 1
+--- !u!114 &1898594620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898594616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa47c7e88f0dcae419d37fe4d238de82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 0
 --- !u!1 &1942932756
 GameObject:
   m_ObjectHideFlags: 0

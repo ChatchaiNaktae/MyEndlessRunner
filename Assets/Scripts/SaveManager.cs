@@ -11,9 +11,9 @@ public class SaveManager : MonoBehaviour
     public int totalDeaths;
     public int selectedPetIndex;
     
-    [Header("Settings Data")]
-    public float musicVolume = 1f;
-    public float sfxVolume = 1f;
+    // [Header("Settings Data")]
+    // public float musicVolume = 1f;
+    // public float sfxVolume = 1f;
     
     [Header("Lifetime Stats for Missions")]
     public int lifetimeCoins;
@@ -39,8 +39,8 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt("HighScore", highScore);
         PlayerPrefs.SetInt("TotalDeaths", totalDeaths);
         PlayerPrefs.SetInt("SelectedPetIndex", selectedPetIndex);
-        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        // PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+        // PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
         PlayerPrefs.SetInt("LifetimeCoins", lifetimeCoins);
         
         PlayerPrefs.Save(); // บังคับให้เขียนลงดิสก์ทันที
@@ -55,8 +55,8 @@ public class SaveManager : MonoBehaviour
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         totalDeaths = PlayerPrefs.GetInt("TotalDeaths", 0);
         selectedPetIndex = PlayerPrefs.GetInt("SelectedPetIndex", 0);
-        musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        // musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        // sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
         lifetimeCoins = PlayerPrefs.GetInt("LifetimeCoins", 0);
         
         Debug.Log("Game Loaded Successfully!");
