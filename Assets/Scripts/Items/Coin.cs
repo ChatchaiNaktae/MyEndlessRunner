@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour, ICollectible
 {
+    [Header("Values")]
     public int scoreValue = 5;
+    public int coinValue = 1;
     public float magnetSpeed = 15f; 
     
     private Transform playerTransform;
@@ -34,7 +36,7 @@ public class Coin : MonoBehaviour, ICollectible
     public void Collect(PlayerScript player)
     {
         player.AddScore(scoreValue);
-        player.AddCoin(1);
+        player.AddCoin(coinValue);
         AudioManager.instance.PlaySFX(player.coinSound);
         Destroy(this.gameObject);
     }
