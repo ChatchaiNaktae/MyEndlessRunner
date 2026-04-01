@@ -113,6 +113,9 @@ public class PlayerScript : MonoBehaviour
         }
         
         isMagnetActive = false;
+        isTransitioningFever = false;
+        feverCollected = 0;
+        UpdateFeverUI();
         
         FindObjectOfType<DiscordManager>().UpdateStatus(
             "Running for Life!", 
@@ -369,6 +372,8 @@ public class PlayerScript : MonoBehaviour
     
     void PlayerDie()
     {
+        // What: Ensure normal physics are restored if the player dies during Fever Mode.
+        rb.gravityScale = 1f;
         isDead = true;
         currentEnergy = 0;
         
