@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7731217585551061233}
   - component: {fileID: 7885102251086344770}
   - component: {fileID: 6522645880670972085}
+  - component: {fileID: -4198710126207242659}
   m_Layer: 0
   m_Name: Coin (Bronze)
   m_TagString: Coin
@@ -152,3 +153,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.50498676, y: 0.5094862}
   m_EdgeRadius: 0
+--- !u!114 &-4198710126207242659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8490012265890124685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a46a5a1be34064ab55fb3b09cbdc02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 5
+  magnetSpeed: 15

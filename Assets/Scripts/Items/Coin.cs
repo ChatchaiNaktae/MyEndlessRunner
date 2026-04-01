@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviour, ICollectible
 {
     public int scoreValue = 5;
     public float magnetSpeed = 15f; 
@@ -28,5 +28,18 @@ public class Coin : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, playerTransform.position, magnetSpeed * Time.deltaTime);
             }
         }
+    }
+    
+    // What: Implements the Collect method required by ICollectible interface.
+    public void Collect(PlayerScript player)
+    {
+        // Add score using the helper method
+        player.AddScore(scoreValue);
+        
+        // Play sound (assuming coinSound is public or you can access it)
+        AudioManager.instance.PlaySFX(player.coinSound);
+        
+        // Destroy the coin object
+        Destroy(this.gameObject);
     }
 }

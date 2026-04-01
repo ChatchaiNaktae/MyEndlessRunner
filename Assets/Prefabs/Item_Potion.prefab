@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6207438137468814667}
   - component: {fileID: 8317177273077516312}
   - component: {fileID: 2586603814642294685}
+  - component: {fileID: -1282213685850394368}
   m_Layer: 0
   m_Name: Item_Potion
   m_TagString: Potion
@@ -120,3 +121,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.56249994}
   serializedVersion: 2
   m_Radius: 0.56249994
+--- !u!114 &-1282213685850394368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4817046466651453050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e28b80c3c4f7d2045b0a91d9084a1600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healAmount: 20

@@ -255,49 +255,21 @@ public class PlayerScript : MonoBehaviour
     {
         if (isDead) return;
         
-        if (hit.gameObject.tag == "Coin")
+        // What: Check if the collided object implements the ICollectible interface.
+        ICollectible collectibleItem = hit.GetComponent<ICollectible>();
+        
+        if (collectibleItem != null)
         {
-            Coin jellyScript = hit.gameObject.GetComponent<Coin>();
-            if (jellyScript != null) score += jellyScript.scoreValue;
-            else score += 5;
-
-            scoreUI.text = score.ToString();
-            CheckHighScore();
-            
-            AudioManager.instance.PlaySFX(coinSound);
-            Destroy(hit.gameObject);
+            // What: Let the item handle its own specific collection logic!
+            collectibleItem.Collect(this);
+            return; // Stop checking further if we collected an item
         }
-        else if (hit.gameObject.tag == "Potion")
-        {
-            currentEnergy += potionHeal;
-            if (currentEnergy > maxEnergy) currentEnergy = maxEnergy;
-            
-            AudioManager.instance.PlaySFX(coinSound);
-            Destroy(hit.gameObject);
-        }
-        else if (hit.gameObject.tag == "Magnet")
-        {
-            StartCoroutine(ActivateMagnetRoutine());
-            AudioManager.instance.PlaySFX(coinSound);
-            Destroy(hit.gameObject);
-        }
-        else if (hit.gameObject.tag == "Giant")
-        {
-            StartCoroutine(GiantRoutine());
-            Destroy(hit.gameObject);
-        }
-        else if (hit.gameObject.tag == "Blast")
-        {
-            if (blastCoroutine != null) StopCoroutine(blastCoroutine);
-            
-            blastCoroutine = StartCoroutine(BlastRoutine());
-            Destroy(hit.gameObject);
-        }
-        else if (hit.gameObject.tag == "DeathZone")
+        
+        if (hit.gameObject.CompareTag("DeathZone"))
         {
             PlayerDie();
         }
-        else if (hit.gameObject.tag == "FeverLetter") 
+        else if (hit.gameObject.CompareTag("FeverLetter")) 
         {
             AudioManager.instance.PlaySFX(coinSound);
             Destroy(hit.gameObject);
@@ -339,6 +311,43 @@ public class PlayerScript : MonoBehaviour
             PlayerPrefs.SetInt("HighScore", highScore);
             PlayerPrefs.Save(); 
         }
+    }
+    
+    // What: Helper method to safely increase the player's score from other scripts.
+    public void AddScore(int amount)
+    {
+        score += amount;
+        if (scoreUI != null) 
+        {
+            scoreUI.text = score.ToString();
+        }
+        CheckHighScore();
+    }
+    
+    // What: Restores player energy.
+    public void HealEnergy(float amount)
+    {
+        currentEnergy += amount;
+        if (currentEnergy > maxEnergy) currentEnergy = maxEnergy;
+    }
+
+    // What: Triggers the Magnet power-up coroutine.
+    public void TriggerMagnet()
+    {
+        StartCoroutine(ActivateMagnetRoutine());
+    }
+
+    // What: Triggers the Giant power-up coroutine.
+    public void TriggerGiant()
+    {
+        StartCoroutine(GiantRoutine());
+    }
+
+    // What: Triggers the Blast power-up coroutine.
+    public void TriggerBlast()
+    {
+        if (blastCoroutine != null) StopCoroutine(blastCoroutine);
+        blastCoroutine = StartCoroutine(BlastRoutine());
     }
     
     void UpdateInGameStatus() {
@@ -440,7 +449,7 @@ public class PlayerScript : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
-    void CollectFeverLetter()
+    public void CollectFeverLetter()
     {
         if (isFeverMode || isTransitioningFever) return;
 
