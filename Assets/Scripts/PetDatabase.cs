@@ -11,6 +11,10 @@ public class PetDatabase : ScriptableObject
         public string petName;
         public Sprite petSprite;
         public GameObject petPrefab;
+        
+        [Header("Shop Settings")]
+        public int price;                 
+        public bool isUnlockedByDefault;
     }
     
     public List<PetData> allPets;

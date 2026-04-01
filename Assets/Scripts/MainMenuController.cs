@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -20,6 +22,8 @@ public class MainMenuController : MonoBehaviour
     public GameObject petButtonPrefab;
     public Transform shopContentContainer;
     public List<PetInfo> availablePets;
+    public TextMeshProUGUI totalCoinText; // <--- อ้างอิงตัวหนังสือ "YOUR COIN: 554"
+    private List<PetButton> spawnedButtons = new List<PetButton>(); // <--- เก็บรายชื่อปุ่มไว้สั่งเปลี่ยนข้อความ
     
     void Start()
     {
@@ -40,6 +44,7 @@ public class MainMenuController : MonoBehaviour
     void GeneratePetShopUI()
     {
         foreach (Transform child in shopContentContainer) Destroy(child.gameObject);
+        spawnedButtons.Clear();
         
         for (int i = 0; i < petDatabase.allPets.Count; i++)
         {
@@ -48,8 +53,28 @@ public class MainMenuController : MonoBehaviour
             
             if (petBtnScript != null)
             {
-                petBtnScript.Setup(this, petDatabase.allPets[i].petName, petDatabase.allPets[i].petSprite, i);
+                var currentPet = petDatabase.allPets[i];
+                petBtnScript.Setup(this, currentPet.petName, currentPet.petSprite, i, currentPet.price, currentPet.isUnlockedByDefault);
+                spawnedButtons.Add(petBtnScript);
             }
+        }
+        
+        RefreshShopUI();
+    }
+    
+    // What: Updates the total coins UI and tells all pet buttons to update their state.
+    public void RefreshShopUI()
+    {
+        // 1. อัปเดตตัวเลขเงินที่มุมซ้ายล่าง
+        if (SaveManager.instance != null && totalCoinText != null)
+        {
+            totalCoinText.text = "YOUR COIN: " + SaveManager.instance.totalCoins.ToString();
+        }
+        
+        // 2. สั่งให้ปุ่มทุกปุ่มอัปเดตคำว่า BUY / SELECT / SELECTED
+        foreach (var btn in spawnedButtons)
+        {
+            if (btn != null) btn.RefreshUI();
         }
     }
     

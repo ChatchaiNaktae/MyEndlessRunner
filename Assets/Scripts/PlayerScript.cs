@@ -32,7 +32,7 @@ public class PlayerScript : MonoBehaviour
     public float energyDrainRate = 5f;
     public float obstacleDamage = 20f;
     public float potionHeal = 20f;
-    private bool isDead = false;
+    public bool isDead = false;
     
     [Header("Magnet Power-up")]
     public static bool isMagnetActive = false;
@@ -101,8 +101,8 @@ public class PlayerScript : MonoBehaviour
         spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
         
         speedMultiplier = 1f;
-        totalDeaths = PlayerPrefs.GetInt("TotalDeaths", 0);
-        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        totalDeaths = SaveManager.instance.totalDeaths;
+        highScore = SaveManager.instance.highScore;
         if (highScoreUI != null) highScoreUI.text = "High Score: " + highScore.ToString();
         
         currentEnergy = maxEnergy;
@@ -304,12 +304,11 @@ public class PlayerScript : MonoBehaviour
     
     void CheckHighScore()
     {
-        if (score > highScore)
+        if (score > SaveManager.instance.highScore)
         {
-            highScore = score; 
+            SaveManager.instance.highScore = score;
             if (highScoreUI != null) highScoreUI.text = "High Score: " + highScore.ToString();
-            PlayerPrefs.SetInt("HighScore", highScore);
-            PlayerPrefs.Save(); 
+            SaveManager.instance.SaveGame();
         }
     }
     
@@ -322,6 +321,13 @@ public class PlayerScript : MonoBehaviour
             scoreUI.text = score.ToString();
         }
         CheckHighScore();
+    }
+    
+    // What: Adds collected coins to the player's total wallet.
+    public void AddCoin(int amount)
+    {
+        SaveManager.instance.totalCoins += amount;
+        // ถ้าน้องชัยมี UI โชว์เงินในหน้าเล่นเกม สามารถสั่งอัปเดต UI ตรงนี้ได้เลยครับ
     }
     
     // What: Restores player energy.
@@ -364,8 +370,9 @@ public class PlayerScript : MonoBehaviour
     {
         isDead = true;
         currentEnergy = 0;
-        totalDeaths++;
-        PlayerPrefs.SetInt("TotalDeaths", totalDeaths);
+        
+        SaveManager.instance.totalDeaths++;
+        SaveManager.instance.SaveGame();
         
         FindObjectOfType<DiscordManager>().UpdateStatus(
             "Game Over", 

@@ -33,13 +33,9 @@ public class Coin : MonoBehaviour, ICollectible
     // What: Implements the Collect method required by ICollectible interface.
     public void Collect(PlayerScript player)
     {
-        // Add score using the helper method
         player.AddScore(scoreValue);
-        
-        // Play sound (assuming coinSound is public or you can access it)
+        player.AddCoin(1);
         AudioManager.instance.PlaySFX(player.coinSound);
-        
-        // Destroy the coin object
         Destroy(this.gameObject);
     }
 }
