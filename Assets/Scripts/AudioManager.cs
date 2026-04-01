@@ -28,4 +28,18 @@ public class AudioManager : MonoBehaviour
         
         Destroy(audioSource);
     }
+    
+    // What: Adjusts the background music volume based on settings.
+    public void SetMusicVolume(float volume)
+    {
+        // สมมติว่าตัวเล่นเพลงชื่อ bgmSource เปลี่ยนชื่อตามโค้ดจริงของน้องชัยได้เลยครับ
+        // bgmSource.volume = volume; 
+    }
+    
+    // What: Adjusts the sound effects volume based on settings.
+    public void SetSFXVolume(float volume)
+    {
+        // สมมติว่าตัวเล่นเสียงเอฟเฟกต์ชื่อ sfxSource
+        // sfxSource.volume = volume; 
+    }
 }

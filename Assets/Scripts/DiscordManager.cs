@@ -55,6 +55,15 @@ public class DiscordManager : MonoBehaviour
         );
     }
     
+    public void OnOpenMission() {
+        UpdateStatus(
+            "In Mission UI", 
+            "Check progression", 
+            "icon_pet", 
+            "Looking for mission"
+        );
+    }
+    
     public void UpdateStatus(string details, string state, string largeImageKey, string largeText)
     {
         if (discord == null) return;

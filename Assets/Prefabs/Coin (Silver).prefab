@@ -165,5 +165,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a46a5a1be34064ab55fb3b09cbdc02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreValue: 5
+  scoreValue: 25
   magnetSpeed: 15

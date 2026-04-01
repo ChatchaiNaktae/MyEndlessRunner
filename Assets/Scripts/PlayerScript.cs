@@ -327,6 +327,7 @@ public class PlayerScript : MonoBehaviour
     public void AddCoin(int amount)
     {
         SaveManager.instance.totalCoins += amount;
+        SaveManager.instance.lifetimeCoins += amount;
         // ถ้าน้องชัยมี UI โชว์เงินในหน้าเล่นเกม สามารถสั่งอัปเดต UI ตรงนี้ได้เลยครับ
     }
     
